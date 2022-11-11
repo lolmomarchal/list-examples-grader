@@ -23,7 +23,7 @@ mkdir testingdir
 cd student-submission
 cp ListExamples.java ../testingdir
 cd ..
-cp TestListExamples.java ../testingdir
+cp TestListExamples.java testingdir
 #going inside testing and then running junit
 
 cd testingdir
