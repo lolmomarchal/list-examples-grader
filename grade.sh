@@ -32,15 +32,13 @@ set +e
 
 CPATH=".:../lib/hamcrest-core-1.3.jar:../lib/junit-4.13.2.jar"
 
-COMPILEERROR= -cp $CPATH *.java 2> all-error.txt
-
 javac -cp $CPATH *.java
   if [[ $? -eq 0 ]]
   then
     java -cp ".;lib/junit-4.13.2.jar;lib/hamcrest-core-1.3.jar" org.junit.runner.JUnitCore TestListExamples 2> all-error.txt
 
-    error=$(grep "FAIL" runtime-error.txt)
-    if [[ error == "FAIL" ]]
+    error=$(grep "FAIL" all-error.txt)
+    if [[ error == "FAILURE!!!" ]]
     then
       echo "Your code had the following errors"
       cat all-error.txt
