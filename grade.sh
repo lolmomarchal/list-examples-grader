@@ -30,7 +30,7 @@ cd testingdir
 
 set +e
 
-CPATH=".:../lib/hamcrest-core-1.3.jar:../lib/junit-4.13.2.jar"
+CPATH=".;lib/hamcrest-core-1.3.jar;lib/junit-4.13.2.jar"
 SCORE=0;
 javac -cp $CPATH *.java
 
