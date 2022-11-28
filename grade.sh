@@ -29,13 +29,29 @@ cp TestListExamples.java testingdir
 cd testingdir
 
 set +e
-javac -cp ."lib/hamcrest-core-1.3.jar;lib/junit-4.13.2.jar" *.java
 
-if [[ $? -eq 0 ]]; then
-  echo "Could not compile files. Compilation error in: "
-  2 >compiler-err.txt
-  cat compiler-err.txt
+CPATH=".:../lib/hamcrest-core-1.3.jar:../lib/junit-4.13.2.jar"
 
-fi
+COMPILEERROR= -cp $CPATH *.java 2> all-error.txt
 
-java -cp ".;lib/junit-4.13.2.jar;lib/hamcrest-core-1.3.jar org.junit.runner.JUnitCore" TestListExamples
+javac -cp $CPATH *.java
+  if [[ $? -eq 0 ]]
+  then
+    java -cp ".;lib/junit-4.13.2.jar;lib/hamcrest-core-1.3.jar" org.junit.runner.JUnitCore TestListExamples 2> all-error.txt
+
+    error=$(grep "FAIL" runtime-error.txt)
+    if [[ error == "FAIL" ]]
+    then
+      echo "Your code had the following errors"
+      cat all-error.txt
+      echo "Code did not compile properly, please try again "
+
+      exit 1
+    fi
+    else
+      echo "Your code compiled properly"
+      echo "100%"
+    exit 0
+  fi
+
+
