@@ -31,25 +31,31 @@ cd testingdir
 set +e
 
 CPATH=".:../lib/hamcrest-core-1.3.jar:../lib/junit-4.13.2.jar"
-
+SCORE=0;
 javac -cp $CPATH *.java
-  if [[ $? -eq 0 ]]
-  then
-    java -cp ".;lib/junit-4.13.2.jar;lib/hamcrest-core-1.3.jar" org.junit.runner.JUnitCore TestListExamples 2> all-error.txt
 
-    error=$(grep "FAIL" all-error.txt)
-    if [[ error == "FAILURE!!!" ]]
-    then
-      echo "Your code had the following errors"
-      cat all-error.txt
-      echo "Code did not compile properly, please try again "
+if [[ $? -eq 0 ]]
+   then
+       echo "Compiled, good job!"
+        SCORE=1
+       java -cp $CPATH org.junit.runner.JUnitCore TestListExamples 2> err.txt
+        ERR=$(grep "FAILURES" err.txt)
+       if [[ $ERR == "FAILURES!!" ]]
+       then
+         cat err.txt
+         echo "Your code failed at least one test, please resubmit"
 
-      exit 1
-    fi
-    else
-      echo "Your code compiled properly"
-      echo "100%"
-    exit 0
-  fi
+         else
+           SCORE=2
+           exit
+      fi
 
 
+   else
+     java -cp $CPATH org.junit.runner.JUnitCore TestListExamples 2> out-err.txt
+       echo "Compile failed, here are the errors found."
+       cat out-err.txt
+       echo $SCORE
+       exit 1
+   fi
+   echo $SCORE
